@@ -1,74 +1,63 @@
-# Pest & Disease Early Warning – Flask Demo
+---
+title: Pest Disease Early Warning System
+emoji: 🌾
+colorFrom: green
+colorTo: yellow
+sdk: docker
+pinned: false
+license: mit
+---
 
-This project implements **Feature 2: Pest & Disease Early Warning** as an end-to-end demo.
+# Pest & Disease Early Warning System
 
-It simulates:
+An AI-powered early warning system for agricultural pest and disease detection using multimodal data fusion.
 
-- Sentinel-2 NDVI/LAI and MODIS LAI
-- Weather time series (Open-Meteo-like)
-- FAO bulletins & social media chatter (as embeddings)
-- Plant data (Perenual-like profile embedding)
-- Land-use context (OpenStreetMap-style)
-- Optional local extension data & farmer pest sightings (text fields in UI)
+## Features
 
-and feeds them into:
+- **Satellite Data Analysis**: Processes LAI/NDVI data from Sentinel-2 and MODIS
+- **Weather Integration**: Incorporates weather patterns for risk assessment
+- **Risk Heatmaps**: Generates spatial risk maps for pest/disease outbreaks
+- **Species-Specific Alerts**: Identifies specific pests and diseases
+- **Intervention Timing**: AI-driven recommendations for optimal intervention timing
+- **Trend Analysis**: Historical risk tracking and forecasting
 
-- A **multimodal transformer encoder** (`MultimodalEncoder`)
-- A **UNet-like pest/disease risk generator** (`PestRiskGenerator`)
-- A **Dreamer-style intervention policy head** (`InterventionPolicy`)
-- A (not yet wired) **GNN** for spatial propagation (`PestPropagationGNN`)
+## Technology Stack
 
-The Flask UI exposes:
+- **Backend**: Flask, PyTorch
+- **Models**: 
+  - Multimodal Transformer for data fusion
+  - UNet-style risk generator
+  - RL-based intervention policy
+  - GNN for spatial propagation
+- **Data**: Synthetic satellite, weather, and land-use data
 
-- A web form to configure field ID, lat/lon and crop type
-- Optional extension/farmer notes
-- A dashboard showing:
-  - Pest/disease risk heatmap
-  - Risk trend over time
-  - Crop outbreak probabilities
-  - Species-level alerts and scores
-  - Suggested control measures
-  - Intervention timing recommendation
-  - Policy probabilities over timing actions
+## Usage
 
-> ⚠️ All data is synthetic. To make this production-ready, swap out
-> `backend/data/data_sources.py` with real API clients and data pipelines.
+1. Enter field information (ID, coordinates, crop type)
+2. Add optional notes about pest sightings or extension observations
+3. Click "Analyze Field" to generate risk assessment
+4. Review the risk heatmap, alerts, and recommendations
 
-## Setup
+## Demo Mode
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+This demo uses synthetic data to demonstrate the system's capabilities. In production, it would integrate:
+- Real Sentinel-2/MODIS satellite imagery
+- Live weather data from Open-Meteo
+- FAO bulletins and social media monitoring
+- User-submitted pest sightings
+
+## API Endpoint
+
+POST `/api/analyze` with JSON:
+```json
+{
+  "field_id": "field-001",
+  "lat": 10.0,
+  "lon": 77.0,
+  "crop_type": "Maize"
+}
 ```
 
-## Run
+## License
 
-```bash
-python app.py
-```
-
-Then open: `http://127.0.0.1:5000/`
-
-## API
-
-You can also call the JSON API:
-
-```bash
-curl -X POST http://127.0.0.1:5000/api/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"field_id":"field-001","lat":10.0,"lon":77.0,"crop_type":"Maize"}'
-```
-
-It returns a JSON structure with:
-
-- `risk_map`
-- `mean_risk`, `max_risk`
-- `zones`
-- `crop_outbreak_probs`
-- `species_alerts`
-- `control_measures`
-- `risk_trend`
-- `policy_probs`, `policy_value`
-- `timing_recommendation`
-- `alerts`
+MIT License
